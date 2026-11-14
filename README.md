@@ -287,9 +287,9 @@ frontend/  React + TypeScript + D3 + three.js (prebuilt in frontend/dist)
 
 ## 🤝 Who built it and how
 
-**Team Astra ZGZ** chose the challenge and set the goals: one link for the judges, free hosting, offline use, and no invented data. The team wrote the product requirements, obtained the NASA PSI study files, set the visual direction with its own reference designs and brand, made the product decisions, and reviewed every result.
+**The idea is Team Astra ZGZ's.** The team conceived FireSight, chose the challenge and set the goals: one link for the judges, free hosting, offline use, and no invented data. The team wrote the product requirements, obtained the NASA PSI study files, set the visual direction with its own reference designs and brand, decided every feature, and reviewed every result.
 
-**An SI coding assistant (Claude, by Anthropic)** wrote the software under the team's direction and proposed technical methods (bootstrap uncertainty, the atmosphere optimizer, active-learning experiment design), which the team reviewed and accepted.
+**Programming:** an SI coding assistant (Claude, by Anthropic) was used to write most of the code, under the team's direction.
 
 **No data value is AI-generated.** Every number comes from NASA PSI tables, NASA technical reports or a model fitted to them. Photographs are NASA originals; the station drawing, flame preview and logo are SI-assisted graphics and are marked in the app.
 
