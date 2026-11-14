@@ -1,0 +1,7 @@
+# Exact versions tested with FireSight (Python 3.10 locally, 3.11 in the Docker image)
+fastapi==0.162.5
+starlette==1.7.0
+uvicorn[standard]==0.54.0
+pydantic==2.14.3
+scikit-learn==1.7.2
+numpy==2.2.4

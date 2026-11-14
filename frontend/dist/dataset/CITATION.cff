@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it and the original NASA sources."
+title: "FireSight unified microgravity combustion test dataset"
+authors:
+  - name: "Team Astra ZGZ"
+version: "1.0"
+date-released: "2026-11-15"
+license: "CC-BY-4.0"
+keywords: [microgravity, combustion, fire safety, NASA PSI, FLEX, ACME, BASS, Saffire]
+references:
+  - type: database
+    title: "NASA Physical Sciences Informatics (PSI)"
+    url: "https://psi.nasa.gov"
+  - type: report
+    title: "Flame Extinguishment Experiment (FLEX) results, NASA/TP-2015-216046"
+    url: "https://ntrs.nasa.gov"

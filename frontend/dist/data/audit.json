@@ -1,0 +1,424 @@
+{
+ "date": "2026-11-14",
+ "passed": 52,
+ "total": 52,
+ "script": "pipeline/audit_math.py",
+ "checks": [
+  {
+   "check": "PIO2 8.2 psia / 34% (report: 128 mmHg)",
+   "got": 128.201287,
+   "expected": 128.0,
+   "tolerance": 0.5,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "PIO2 10.2 psia / 26.5% (report: 127 mmHg)",
+   "got": 127.330516,
+   "expected": 127.0,
+   "tolerance": 0.5,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "PIO2 8.0 psia / 32% (report: 117 mmHg)",
+   "got": 117.350278,
+   "expected": 117.0,
+   "tolerance": 0.5,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "PIO2 sea level 20.9% (report: ~149 mmHg)",
+   "got": 149.017067,
+   "expected": 149.0,
+   "tolerance": 0.5,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "ppN2 14.7 psia / 21% (report: 11.6 psia)",
+   "got": 11.613,
+   "expected": 11.6,
+   "tolerance": 0.05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "ppN2 8.2 psia / 34% (report: 5.4 psia)",
+   "got": 5.412,
+   "expected": 5.4,
+   "tolerance": 0.05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "R 8.2/34 = ppN2 / 4.3 psia",
+   "got": 1.258605,
+   "expected": 1.26,
+   "tolerance": 0.005,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Pressure at 8,000 ft (FAA cabin limit; 10.92 psia)",
+   "got": 75.262355,
+   "expected": 75.290746,
+   "tolerance": 0.1,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Pressure at 5,000 m (tabulated 54.05 kPa)",
+   "got": 54.01988,
+   "expected": 54.05,
+   "tolerance": 0.05,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "FLEX tests used",
+   "got": 274.0,
+   "expected": 274.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Standardization mean of O2 matches data",
+   "got": 20.043796,
+   "expected": 20.043796,
+   "tolerance": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Standardization sd of O2 matches data (population sd)",
+   "got": 4.800956,
+   "expected": 4.800956,
+   "tolerance": 1e-06,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Cross-validated AUC (scaler inside each fold)",
+   "got": 0.859217,
+   "expected": 0.859,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "O2-only AUC",
+   "got": 0.806104,
+   "expected": 0.806,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Brier score",
+   "got": 0.137954,
+   "expected": 0.138,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Brier no-skill baseline = base rate × (1 − base rate)",
+   "got": 0.219311,
+   "expected": 0.219,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Accuracy at 0.5",
+   "got": 0.79562,
+   "expected": 0.796,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Confusion matrix sums to n",
+   "got": 274.0,
+   "expected": 274.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Bootstrap refits",
+   "got": 300.0,
+   "expected": 300.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Odds ratio per +1 pt O2 (median)",
+   "got": 1.405145,
+   "expected": 1.405,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat earth: P(persist) median",
+   "got": 0.659967,
+   "expected": 0.66,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat earth: 90% interval low",
+   "got": 0.537086,
+   "expected": 0.537,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat spacecraft: P(persist) median",
+   "got": 0.659967,
+   "expected": 0.66,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat spacecraft: 90% interval low",
+   "got": 0.537086,
+   "expected": 0.537,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat lunar_base: P(persist) median",
+   "got": 0.971351,
+   "expected": 0.971,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat lunar_base: 90% interval low",
+   "got": 0.939834,
+   "expected": 0.94,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat rover: P(persist) median",
+   "got": 0.992765,
+   "expected": 0.993,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat rover: 90% interval low",
+   "got": 0.978992,
+   "expected": 0.979,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat mars_base: P(persist) median",
+   "got": 0.971351,
+   "expected": 0.971,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat mars_base: 90% interval low",
+   "got": 0.939834,
+   "expected": 0.94,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat suit: P(persist) median",
+   "got": 0.992765,
+   "expected": 0.993,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat suit: 90% interval low",
+   "got": 0.978992,
+   "expected": 0.979,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat apollo1: P(persist) median",
+   "got": 0.994061,
+   "expected": 0.994,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat apollo1: 90% interval low",
+   "got": 0.978686,
+   "expected": 0.979,
+   "tolerance": 0.0015,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat earth: nearby tests",
+   "got": 342.0,
+   "expected": 342.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat spacecraft: nearby tests",
+   "got": 342.0,
+   "expected": 342.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat lunar_base: nearby tests",
+   "got": 56.0,
+   "expected": 56.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat rover: nearby tests",
+   "got": 37.0,
+   "expected": 37.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat mars_base: nearby tests",
+   "got": 56.0,
+   "expected": 56.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat suit: nearby tests",
+   "got": 0.0,
+   "expected": 0.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Habitat apollo1: nearby tests",
+   "got": 0.0,
+   "expected": 0.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "CFI-G median burn ~21% (air)",
+   "got": 8.0,
+   "expected": 8.0,
+   "tolerance": 0.51,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "CFI-G median burn 22-30%",
+   "got": 11.0,
+   "expected": 11.0,
+   "tolerance": 0.51,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "CFI-G median burn 30-36% (lunar habitat)",
+   "got": 44.0,
+   "expected": 44.0,
+   "tolerance": 0.51,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "CFI-G median burn 36-40%",
+   "got": 51.0,
+   "expected": 51.0,
+   "tolerance": 0.51,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Buoyant velocity Moon",
+   "got": 16.099689,
+   "expected": 16.1,
+   "tolerance": 0.051,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Buoyant velocity Mars",
+   "got": 24.363908,
+   "expected": 24.4,
+   "tolerance": 0.051,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Buoyant velocity Earth",
+   "got": 39.618178,
+   "expected": 39.6,
+   "tolerance": 0.051,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Optimizer O2 at continuous optimum",
+   "got": 33.95,
+   "expected": 34.0,
+   "tolerance": 0.5,
+   "pass": true,
+   "note": "(NASA Exploration Atmosphere: 34%)"
+  },
+  {
+   "check": "Optimizer pressure at continuous optimum (kPa)",
+   "got": 56.55,
+   "expected": 56.537007,
+   "tolerance": 1.0,
+   "pass": true,
+   "note": "(8.2 psia = 56.5 kPa)"
+  },
+  {
+   "check": "O2 coefficient is positive (more O2, more persistence)",
+   "got": 1.0,
+   "expected": 1.0,
+   "tolerance": 0,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "check": "Sherman–Morrison update vs matrix inverse (max abs diff)",
+   "got": 0.0,
+   "expected": 0.0,
+   "tolerance": 1e-08,
+   "pass": true,
+   "note": ""
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: firesight
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: FIRESIGHT_LLM_API_KEY
+        sync: false
+      - key: FIRESIGHT_LLM_API_MODEL
+        value: llama-3.1-8b-instant
