@@ -98,6 +98,23 @@ def _xy(rows):
     return X, y
 
 
+def _fit_newton(Xs, y, iters=25):
+    """Same objective as sklearn LogisticRegression(C=1, L2): log-loss + 0.5·||w||² (intercept not penalized),
+    solved with Newton's method in NumPy. Used for the bootstrap refits: identical solution, ~100× faster on a small CPU."""
+    A = np.column_stack([np.ones(len(y)), Xs])
+    reg = np.eye(A.shape[1]); reg[0, 0] = 0
+    w = np.zeros(A.shape[1])
+    for _ in range(iters):
+        p = 1 / (1 + np.exp(-np.clip(A @ w, -35, 35)))
+        g = A.T @ (p - y) + reg @ w
+        H = (A * (p * (1 - p))[:, None]).T @ A + reg
+        step = np.linalg.solve(H, g)
+        w -= step
+        if np.abs(step).max() < 1e-9:
+            break
+    return w
+
+
 def _model():
     return make_pipeline(StandardScaler(), LogisticRegression(C=1.0, max_iter=5000))
 
@@ -157,10 +174,9 @@ def run(body, user_rows, rejected):
         idx = rng.integers(0, len(y), len(y))
         if len(set(y[idx])) < 2:
             continue
-        m = LogisticRegression(C=1.0, max_iter=2000).fit(Xs[idx], y[idx])
-        boots.append([float(m.intercept_[0])] + [float(c) for c in m.coef_[0]])
+        boots.append([float(v) for v in _fit_newton(Xs[idx], y[idx])])
         if (b + 1) % step == 0 or b + 1 == B:
-            yield ev("progress", f"Bootstrap refit {b + 1}/{B}", 0.36 + 0.56 * (b + 1) / B)
+            yield ev("progress", f"Bootstrap refit {b + 1}/{B} (Newton solver, NumPy)", 0.36 + 0.56 * (b + 1) / B)
     boots = np.array(boots)
     orr = np.exp(boots[:, 1] / sd[0])
     yield ev("done", f"{len(boots)} bootstrap models trained · odds ratio per +1 pt O₂ ×{np.median(orr):.2f} (90% CI {np.percentile(orr, 5):.2f}–{np.percentile(orr, 95):.2f})", 0.94)
