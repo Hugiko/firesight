@@ -15,6 +15,7 @@ from pydantic import BaseModel
 from .assistant import LAST_LLM_ERROR, active_model, answer, llm_available
 from .data import ROOT, store
 from .search import search
+from . import train as lab
 
 app = FastAPI(title="FireSight API", version="1.0",
               description="NASA PSI combustion data for spacecraft and habitat fire safety.")
@@ -223,6 +224,47 @@ def ask(body: Ask, request: Request):
     ip = (request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "?"))
     use_llm = body.use_llm and _llm_allowed(ip)
     return answer(q, body.investigation, use_llm)
+
+
+class TrainBody(BaseModel):
+    dataset: str = "nasa"            # nasa | nasa+user | user
+    rows: list = []                  # user tests in the template format (never stored)
+    shuffle: bool = False            # permutation test
+    nasa_fraction: float = 1.0       # share of NASA FLEX tests to keep (0.1–1)
+    n_boot: int = 200                # bootstrap refits (20–300)
+    seed: int = 7
+
+
+_TRAIN_CALLS: dict = {}
+TRAIN_PER_IP_PER_MIN = int(os.environ.get("FIRESIGHT_TRAIN_PER_MIN", "8"))
+
+
+@app.get("/api/train/template.csv")
+def train_template():
+    return StreamingResponse(iter([lab.template_csv()]), media_type="text/csv",
+                             headers={"Content-Disposition": "attachment; filename=firesight_flex_training_template.csv"})
+
+
+@app.post("/api/train")
+def train_model(body: TrainBody, request: Request):
+    """Retrains the FLEX model with scikit-learn and streams progress as NDJSON (one JSON event per line)."""
+    if body.dataset not in ("nasa", "nasa+user", "user"):
+        raise HTTPException(400, "dataset must be nasa, nasa+user or user")
+    if not (0.1 <= body.nasa_fraction <= 1) or not (20 <= body.n_boot <= 300):
+        raise HTTPException(400, "nasa_fraction must be 0.1–1 and n_boot 20–300")
+    if len(body.rows) > lab.MAX_ROWS:
+        raise HTTPException(400, f"At most {lab.MAX_ROWS} rows per upload")
+    ip = (request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "?"))
+    now = time.time()
+    recent = [t for t in _TRAIN_CALLS.get(ip, []) if now - t < 60]
+    if len(recent) >= TRAIN_PER_IP_PER_MIN:
+        raise HTTPException(429, "Too many trainings in a minute; wait a moment")
+    _TRAIN_CALLS[ip] = recent + [now]
+    if len(_TRAIN_CALLS) > 5000:
+        _TRAIN_CALLS.clear()
+    user_rows, rejected = lab.clean_user_rows(body.rows) if body.dataset != "nasa" else ([], [])
+    return StreamingResponse(lab.stream(body, user_rows, rejected), media_type="application/x-ndjson",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
 DIST = Path(os.environ.get("FIRESIGHT_STATIC", ROOT / "frontend" / "dist"))

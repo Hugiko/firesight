@@ -165,6 +165,24 @@ Active learning on the model's uncertainty: it scores **1,092 candidate test con
 *Method: the 300 bootstrap refits give a coefficient covariance Σ. A test adds Fisher information n·p(1−p)·c·cᵀ, and Σ is updated with Sherman–Morrison. Tests are picked greedily to minimize the summed prediction variance at the habitat targets.*
 </details>
 
+### 🔬 Model Lab: train it yourself, live
+
+The model is not a fixed table. **Model Lab retrains it on the server, in real time, with Python and scikit-learn**, and streams every cross-validation fold and bootstrap refit to the screen.
+
+- **NASA FLEX only:** reproduces the official model exactly (AUC 0.859, Brier 0.138).
+- **NASA + your tests:** upload a CSV in the template format (`o2_pct, pressure_kpa, co2_pct, he_pct, fuel, flame_persists`); every row is validated and rejected rows are reported. Nothing is stored and the official model never changes.
+- **Permutation test:** shuffle the outcomes and the AUC falls to **≈ 0.46**, which is chance level, and the curve goes flat. That is the proof that it learns from the data.
+
+<img src="docs/img/model-lab.jpg" alt="Model Lab: live training log, cross-validated AUC 0.859, official vs retrained curves" width="100%">
+
+<details>
+<summary><b>See the permutation test and a training with uploaded tests</b></summary>
+<img src="docs/img/model-lab-shuffle.jpg" alt="Permutation test: AUC 0.461 with shuffled outcomes and a flat curve" width="100%">
+<img src="docs/img/model-lab-user.jpg" alt="Training on NASA plus four user tests" width="100%">
+
+*API: `POST /api/train` streams NDJSON events (one per fold and refit, then the result); `GET /api/train/template.csv` returns the 274 FLEX tests in the upload format. One training at a time per server, 8 per minute per visitor, 5,000 rows maximum.*
+</details>
+
 ### 💾 Your scenarios: save, compare, brief
 
 <table>

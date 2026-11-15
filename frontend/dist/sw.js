@@ -1,5 +1,5 @@
 /* FireSight offline support: cache the app shell, data and media; never cache the live API. */
-const CACHE = "firesight-v4";
+const CACHE = "firesight-v5";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png",
   "data/analytics.json", "data/tests.json", "data/investigations.json", "data/meta.json", "data/scenarios.json",
   "data/timeline.json", "data/earth.json", "data/gallery.json", "data/graph.json", "data/publications.json",
