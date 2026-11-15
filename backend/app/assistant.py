@@ -144,6 +144,23 @@ def _extractive(question, passages):
     return " ".join(picked)
 
 
+LAST_LLM_ERROR = {"error": None}
+
+
+def _describe_error(e):
+    msg = f"{type(e).__name__}"
+    code = getattr(e, "code", None)
+    if code:
+        msg += f" {code}"
+    try:
+        body = e.read().decode("utf-8", "replace")[:300] if hasattr(e, "read") else str(e)[:300]
+    except Exception:
+        body = str(e)[:300]
+    if API_KEY:
+        body = body.replace(API_KEY, "***")
+    return f"{msg}: {body}"
+
+
 def summarize_tests(tests):
     if not tests:
         return None
@@ -185,7 +202,10 @@ def answer(question, investigation=None, use_llm=True):
         try:
             text = _ask_llm(question, passages, tests)
             mode = "llm"
-        except Exception:
+            LAST_LLM_ERROR["error"] = None
+        except Exception as e:  # keep serving cited extracts, but record why (never the key)
+            LAST_LLM_ERROR["error"] = _describe_error(e)
+            print("FireSight LLM error:", LAST_LLM_ERROR["error"], flush=True)
             text = None
     if not text:
         ext = _extractive(question, passages) or "No passage in the NASA sources matches this question closely."

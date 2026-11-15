@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from .assistant import answer, llm_available
+from .assistant import LAST_LLM_ERROR, answer, llm_available
 from .data import ROOT, store
 from .search import search
 
@@ -53,7 +53,7 @@ TEST_COLS = ["test_id", "investigation", "date", "fuel", "fuel_phase", "material
 def health():
     s = store()
     return {"status": "ok", "investigations": len(s["investigations"]), "tests": len(s["tests"]),
-            "llm": llm_available()}
+            "llm": llm_available(), "llm_last_error": LAST_LLM_ERROR["error"]}
 
 
 @app.get("/api/meta")
