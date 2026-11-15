@@ -50,11 +50,37 @@ def _api_ready():
     try:
         req = urllib.request.Request(API_URL + "/models", headers={"Authorization": f"Bearer {API_KEY}", "User-Agent": "FireSight/1.0"})
         with urllib.request.urlopen(req, timeout=5) as r:
-            _API_CHECK["ok"] = r.status == 200
+            ids = [m.get("id", "") for m in json.loads(r.read()).get("data", [])]
+        ACTIVE["model"] = _pick_model(ids)
+        _API_CHECK["ok"] = ACTIVE["model"] is not None
     except Exception:
         _API_CHECK["ok"] = False
     _API_CHECK["t"] = time.time()
     return _API_CHECK["ok"]
+
+
+# Models this key can use, in order of preference (open-weight chat models). The configured one wins if available.
+PREFERRED = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "openai/gpt-oss-20b", "openai/gpt-oss-120b",
+             "meta-llama/llama-4-scout-17b-16e-instruct", "meta-llama/llama-4-maverick-17b-128e-instruct",
+             "qwen/qwen3-32b", "qwen/qwen3.8-27b", "moonshotai/kimi-k2-instruct"]
+NOT_CHAT = ("whisper", "guard", "orpheus", "tts", "safeguard", "embed", "distil")
+ACTIVE = {"model": None}
+
+
+def _pick_model(ids):
+    if not ids:
+        return None
+    if API_MODEL in ids:
+        return API_MODEL
+    for m in PREFERRED:
+        if m in ids:
+            return m
+    chat = [m for m in ids if not any(x in m.lower() for x in NOT_CHAT)]
+    return chat[0] if chat else None
+
+
+def active_model():
+    return ACTIVE["model"] or API_MODEL
 
 
 def llm_available():
@@ -96,14 +122,21 @@ def _context(passages, tests):
 
 
 def _ask_api(question, passages, tests):
-    body = {"model": API_MODEL, "temperature": 0.1, "max_tokens": 400,
+    model = active_model()
+    body = {"model": model, "temperature": 0.1, "max_tokens": 900,
             "messages": [{"role": "system", "content": SYSTEM},
                          {"role": "user", "content": f"Sources:\n{_context(passages, tests)}\n\nQuestion: {question}"}]}
+    if "gpt-oss" in model:
+        body["reasoning_effort"] = "low"  # reasoning models: keep the budget for the answer
     req = urllib.request.Request(API_URL + "/chat/completions", data=json.dumps(body).encode(),
                                  headers={"Content-Type": "application/json", "Authorization": f"Bearer {API_KEY}",
                                           "User-Agent": "FireSight/1.0"})
     with urllib.request.urlopen(req, timeout=LLM_TIMEOUT) as r:
-        return json.loads(r.read())["choices"][0]["message"]["content"].strip()
+        text = (json.loads(r.read())["choices"][0]["message"].get("content") or "")
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()
+    if not text:
+        raise ValueError(f"empty answer from {model}")
+    return text
 
 
 def _ask_llm(question, passages, tests):
@@ -211,7 +244,7 @@ def answer(question, investigation=None, use_llm=True):
         ext = _extractive(question, passages) or "No passage in the NASA sources matches this question closely."
         ds = data_summary(question, cond, tests)
         text = f"{ds} {ext}" if ds else ext
-    return {"question": question, "answer": text, "mode": mode, "model": (API_MODEL if backend == "api" else LLM_MODEL) if mode == "llm" else None, "conditions": cond,
+    return {"question": question, "answer": text, "mode": mode, "model": (active_model() if backend == "api" else LLM_MODEL) if mode == "llm" else None, "conditions": cond,
             "sources": [{"n": i, "source": p["source"], "title": p["title"], "url": p["url"], "page": p["page"],
                          "investigation": p["investigation"], "excerpt": p["text"][:500]} for i, p in enumerate(passages, 1)],
             "tests": tests}
